@@ -34,4 +34,11 @@ while True:
             if len(data) == 0:
                 print("Client disconnected")
                 break
-            print('Read: "{0}"'.format(data))
+            try:
+              command = json.loads(data)
+              print('Read: "{0}"'.format(data))
+              
+            except:
+              print("Error reading JSON packet")
+              # Need better error handling!
+              
