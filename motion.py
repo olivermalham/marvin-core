@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import errno
 import json
@@ -5,19 +7,45 @@ import json
 BASE_DIR = '/etc/marvin/'
 MOTION_FIFO = 'motion'
 
+valid_attributes = ["wheel", "head"]
+
 """
-Example JSON packet
+Note that the wheels are numbered front to back, odd on the left, even on the right.
+Wheel array *must* have exactly six entries.
+Speed is between 0 and 1.0, and is treated as a fraction of the maximum speed.
+All directions are 0 for straight foward, positive for right, negaive for left.
+Positive head pitch is up.
+
+Example JSON packet.
 {
-  'wheels': {
-    'direction': [1, 2, 3, 4 ,5 ,6],
-    'speed': [0, 0, 0, 255, 255, 255]
-  },
+  'wheel': [
+        {
+            'direction': 0,
+            'speed': 0.25 
+        },
+        {
+            'direction': 0,
+            'speed': 0.25 
+        }
+    ]
   'head': {
     'pitch': 0,
     'yaw': 0
   }
 }
+
+We're assuming that the wheel servo IDs match the numbering described above. Head yaw will have ID 7, pitch 8.
 """
+
+
+def valid_command(command):
+    """ Check the received JSON matches what we expect
+    """
+    for key in command:
+        if key not in valid_attributes:
+            return False
+    return True
+
 
 try:
     os.mkfifo(BASE_DIR+MOTION_FIFO)
@@ -26,19 +54,23 @@ except OSError as oe:
         raise
 
 while True:
-    print("Opening motion FIFO...")
+    print(f"Listening to motion FIFO on {BASE_DIR}{MOTION_FIFO}...")
     with open(BASE_DIR+MOTION_FIFO) as fifo:
-        print("FIFO opened")
+        print(f"FIFO opened")
         while True:
             data = fifo.read()
+            print('Read: "{0}"'.format(data.strip()))
             if len(data) == 0:
                 print("Client disconnected")
                 break
             try:
               command = json.loads(data)
-              print('Read: "{0}"'.format(data))
+              print(f'Command: {command}')
+              if not valid_command(command):
+                  print("Invalid command!")
               
-            except:
+            except Exception as e:
               print("Error reading JSON packet")
+              print(e)
               # Need better error handling!
               
