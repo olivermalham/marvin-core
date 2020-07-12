@@ -1,0 +1,32 @@
+{
+	"wheel": [
+		{
+			"distance":0,
+			"speed": 0.25
+		},
+		{
+			"distance":0,
+			"speed": 0.25
+		},
+		{
+			"distance":0,
+			"speed": 0.25
+		},
+		{
+			"distance":0,
+			"speed": 0.25
+		},
+		{
+			"distance":0,
+			"speed": 0.25
+		},
+		{
+			"distance":0,
+			"speed": 0.25
+		}
+	],
+	"head": {
+		"pitch": 0,
+		"yaw": 0
+	}
+}
