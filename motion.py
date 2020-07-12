@@ -7,6 +7,10 @@ import json
 BASE_DIR = '/etc/marvin/'
 MOTION_FIFO = 'motion'
 
+# USB serial ports for Arduino Nanos that control left and right side motors
+left_control_port = '/dev/ttyUSB0'
+right_control_port = '/dev/ttyUSB1'
+
 valid_attributes = ["wheel", "head"]
 
 """
@@ -47,11 +51,6 @@ def valid_command(command):
     return True
 
 
-try:
-    os.mkfifo(BASE_DIR+MOTION_FIFO)
-except OSError as oe:
-    if oe.errno != errno.EEXIST:
-        raise
 
 while True:
     print(f"Listening to motion FIFO on {BASE_DIR}{MOTION_FIFO}...")
