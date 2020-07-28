@@ -14,10 +14,10 @@ servo_id = None
 servo = None
 
 servos = {}
-
+sleep(1)
 
 if __name__ == '__main__':
-    print("Searching for servos", end='', flush=True)
+    print("Searching for servos", flush=True)
     for search_id in range(255):
         try:
             servo = controller.servo(search_id)
@@ -27,6 +27,7 @@ if __name__ == '__main__':
             print(search_id, end='', flush=True)
         except lewansoul_lx16a.TimeoutError as e:
             print(".", end='', flush=True)
-
-
+        except KeyboardInterrupt:
+            print("\nExiting")
+            quit()
 

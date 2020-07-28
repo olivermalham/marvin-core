@@ -105,16 +105,15 @@ class ServoController(object):
             0x55, 0x55, servo_id, length, command, *params, checksum
         ])
         with self._lock:
-            self._serial.write(bytearray([
+            written = self._serial.write(bytearray([
                 0x55, 0x55, servo_id, length, command, *params, checksum
             ]))
+            # As Tx and Rx are tied together, read the same number of bytes as we just sent to clear the input buffer
+            self._serial.read(written)
 
     def _wait_for_response(self, servo_id, command, timeout=None):
         timeout = Timeout(timeout or self._timeout)
 
-        # As Tx and Rx are tied together, clear the receive buffer to get rid of our last outbound packet.
-        self._serial.flushInput()
-        
         def read(size=1):
             self._serial.timeout = timeout.time_left()
             data = self._serial.read(size)
@@ -135,7 +134,7 @@ class ServoController(object):
             length = data[3]
             cmd = data[4]
             if length > 7:
-                LOGGER.error('Invalid length for packet %s', list(data))
+                print('Invalid length for packet %s', list(data), flush=True)
                 continue
 
             data += read(length-3) if length > 3 else []
@@ -143,18 +142,18 @@ class ServoController(object):
             data += read(1)
             checksum = data[-1]
             if 255-(sid + length + cmd + sum(params)) % 256 != checksum:
-                LOGGER.error('Invalid checksum for packet %s', list(data))
+                print('Invalid checksum for packet %s', list(data), flush=True)
                 continue
 
             if cmd != command:
-                LOGGER.warning('Got unexpected command %s response %s',
-                               cmd, list(data))
+                print('Got unexpected command %s response %s', cmd, list(data), flush=True)
                 continue
 
             if servo_id != SERVO_ID_ALL and sid != servo_id:
-                LOGGER.warning('Got command response from unexpected servo %s', sid)
+                print('Got command response from unexpected servo %s', sid, flush=True)
                 continue
-            return [sid, cmd, *params]
+            break
+        return [sid, cmd, *params]
 
     def _query(self, servo_id, command, timeout=None):
         with self._lock:
@@ -166,7 +165,6 @@ class ServoController(object):
 
     def get_servo_id(self, servo_id=SERVO_ID_ALL, timeout=None):
         response = self._query(servo_id, SERVO_ID_READ, timeout=timeout)
-        print(response)
         return response[2]
 
     def set_servo_id(self, servo_id, new_servo_id):

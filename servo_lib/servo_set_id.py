@@ -16,22 +16,21 @@ servo = None
 
 if __name__ == '__main__':
     new_id = int(sys.argv[1])
-    print("Searching for servo", end='', flush=True)
-    for search_id in range(255):
-        try:
-            servo = controller.servo(search_id)
-            servo.get_servo_id(search_id)
-            servo_id = search_id
-            break
-        except lewansoul_lx16a.TimeoutError as e:
-            print(".", end='', flush=True)
+    print("Searching for servo...", end='', flush=True)
+            
+    # Find what ever servo is currently on the bus
+    servo_id = controller.get_servo_id()
 
     if servo_id is None:
         print("No servo found.")
         quit()
 
-    print(f"Servo found with id of {servo_id}. Updating to {new_id}")
-    servo.set_servo_id(servo_id, new_id)
+    print(servo_id)
 
-    quit()
+    if input("Continue? (Y/n)") == "Y":
+
+        print(f"Servo found with id of {servo_id}. Updating to {new_id}")
+        controller.set_servo_id(servo_id, new_id)
+
+        quit()
 

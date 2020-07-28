@@ -10,7 +10,7 @@ controller = lewansoul_lx16a.ServoController(
 
 head_tilt = controller.servo(5)
 
-print("Position:{0}".format(head_tilt.get_position(timeout=1)))
+#print("Position:{0}".format(head_tilt.get_position(timeout=1)))
 old_position = -100
 position = 0
 
