@@ -1,3 +1,4 @@
+import sys
 import serial
 import lewansoul_lx16a
 from time import sleep
@@ -8,32 +9,32 @@ controller = lewansoul_lx16a.ServoController(
     serial.Serial(SERIAL_PORT, 115200, timeout=1), timeout=5
 )
 
-head_tilt = controller.servo(5)
+if __name__ == '__main__':
+    servo_id = int(sys.argv[1])
 
-#print("Position:{0}".format(head_tilt.get_position(timeout=1)))
-old_position = -100
-position = 0
+    servo = controller.servo(servo_id)
+    if servo.get_servo_id() is None:
+        print(f"Failed to connect to servo {servo_id}")
+        quit()
 
-while True:
-    # control servos directly
-    value = int(input("Advance:"))
-    head_tilt.move(value)
+    print(f"Connected to servo {servo_id}")
+    old_position = servo.get_position(timeout=1)
     
-    while position != old_position:
-        sleep(0.2)
-        old_position = position
-        position = head_tilt.get_position()
-        print(position)
+    print(f"Current position:{old_position}")
+    position = 0
 
-
-quit()
-# or through proxy objects
-servo1 = controller.servo(1)
-servo2 = controller.servo(2)
-
-servo1.move(100)
-
-# synchronous move of multiple servos
-servo1.move_prepare(300)
-servo2.move_prepare(600)
-controller.move_start()
+    while True:
+        # control servos directly
+        target = input("Target: ")
+        if target == "q":
+            print("Quitting")
+            quit()
+        if target == "p":
+            position = servo.get_position()
+            print(f"Position: {position}", flush=True)
+        else:
+            servo.move(int(target))
+            sleep(2.0)
+            position = servo.get_position()
+            print(f"Position: {position}", flush=True)
+ 
