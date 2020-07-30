@@ -2,27 +2,33 @@
 	"wheel": [
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		},
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		},
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		},
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		},
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		},
 		{
 			"distance":0,
-			"speed": 0.25
+			"speed": 0.25,
+			"angle": 500
 		}
 	],
 	"head": {
