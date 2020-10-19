@@ -12,13 +12,11 @@
 		},
 		{
 			"distance":0,
-			"speed": 0.25,
-			"angle": 500
+			"speed": 0.25
 		},
 		{
 			"distance":0,
-			"speed": 0.25,
-			"angle": 500
+			"speed": 0.25
 		},
 		{
 			"distance":0,

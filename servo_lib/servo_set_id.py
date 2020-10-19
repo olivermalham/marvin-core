@@ -15,11 +15,15 @@ servo = None
 
 
 if __name__ == '__main__':
-    new_id = int(sys.argv[1])
+    if len(sys.argv) == 3:
+        target_id = int(sys.argv[1])
+        new_id = int(sys.argv[2])
+    else:
+        target_id = 254
+        new_id = int(sys.argv[1])
     print("Searching for servo...", end='', flush=True)
             
-    # Find what ever servo is currently on the bus
-    servo_id = controller.get_servo_id()
+    servo_id = controller.get_servo_id(target_id)
 
     if servo_id is None:
         print("No servo found.")
