@@ -33,7 +33,7 @@ if __name__ == '__main__':
             position = servo.get_position()
             print(f"Position: {position}", flush=True)
         else:
-            servo.move(int(target))
+            servo.move(int(target), 1500)
             sleep(2.0)
             position = servo.get_position()
             print(f"Position: {position}", flush=True)
